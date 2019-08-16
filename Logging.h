@@ -1,7 +1,7 @@
 /**
  * @file Logging.h
- * @author your name (you@domain.com)
- * @brief
+ * @author 季杰 (396438446@qq.com)
+ * @brief JLog的接口
  * @version 0.1
  * @date 2019-08-16
  *
@@ -17,7 +17,7 @@
 #include <string>
 #include "LogStream.h"
 
-const int roll_size = 40000;
+const int roll_size = 40000; ///< 设定日志文件的滚动大小
 
 class Logger {
 public:
