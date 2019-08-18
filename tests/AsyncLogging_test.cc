@@ -14,18 +14,18 @@ int main() {
     // 3s测试--OK，32KB
     for (int i = 0; i < 10000; i++) {
         LOG.append(logline, n);
-        usleep(1000);
+        usleep(100);
     }
     // 普通测试--OK
     for (int i = 0; i < 10000; i++) {
         LOG.append(logline, n);
-        usleep(1000);
+        usleep(100);
     }
     //! 滚动测试--ERROR
     for (int i = 0; i < 10000; i++) {
         LOG.append(logline, n);
-        // 睡1ms
-        usleep(1000);
+        // 睡0.1ms
+        usleep(100);
     }
     return 0;
 }
