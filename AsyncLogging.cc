@@ -5,6 +5,8 @@
 #include <functional>
 #include "LogFile.h"
 
+namespace JLog {
+
 AsyncLogging::AsyncLogging(const std::string& basename, off_t roll_size,
                            int flush_interval)
     : flush_interval_(flush_interval),
@@ -104,4 +106,6 @@ void AsyncLogging::threadFunc() {
         output.flush();
     }
     output.flush();
+}
+
 }

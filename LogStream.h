@@ -4,6 +4,8 @@
 #include <string>
 #include "noncopyable.h"
 
+namespace JLog {
+
 const int k_small_buffer = 4000;        //4KB
 const int k_large_buffer = 4000 * 1000; //4MB
 
@@ -95,3 +97,5 @@ private:
     Buffer buffer_;
     static const int k_max_size = 32;  // 32位代表double等的有效位数+12位小数位
 };
+
+}

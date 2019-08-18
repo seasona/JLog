@@ -4,6 +4,8 @@
 #include <string>
 #include "noncopyable.h"
 
+namespace JLog {
+
 /**
  * @brief 最底层的文件类，封装了Log文件的打开、写入并在类析构的时候关闭
  * 文件，底层使用了标准IO，该append函数直接向文件写入
@@ -42,3 +44,5 @@ private:
     off_t written_bytes_ = 0;
     char buffer_[64 * 1024];
 };
+
+}

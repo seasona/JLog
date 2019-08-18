@@ -3,10 +3,12 @@
 #include <time.h>
 #include "AsyncLogging.h"
 
+namespace JLog {
+
 static pthread_once_t once_control = PTHREAD_ONCE_INIT;
 static AsyncLogging* async_logger;
 
-std::string Logger::log_filename_ = "/JLog.log";
+std::string Logger::log_filename_ = "JLog.log";
 
 void once_init() {
     async_logger = new AsyncLogging(Logger::getLogFileName(), roll_size);
@@ -30,7 +32,7 @@ void Logger::Impl::formatTime() {
     time = tv.tv_sec;
     struct tm* p_time = localtime(&time);
     strftime(str_t, 26, "%Y-%m-%d %H:%M:%S", p_time);
-    stream_ << str_t;
+    stream_ << str_t<<"--( ";
 }
 
 Logger::Logger(const char* filename, int line) : impl_(filename, line) {}
@@ -38,7 +40,9 @@ Logger::Logger(const char* filename, int line) : impl_(filename, line) {}
 Logger::~Logger() {
     // 写入格式为时间--源文件:行号\n正文
     // 写入源文件：行号
-    impl_.stream_ << "--" << impl_.basename_ << ":" << impl_.line_ << "\n";
+    impl_.stream_ << " )--" << impl_.basename_ << ":" << impl_.line_ << "\n";
     const LogStream::Buffer& buf(this->stream().buffer());
     output(buf.data(), buf.length());
+}
+
 }

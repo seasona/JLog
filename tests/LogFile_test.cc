@@ -2,7 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 
-LogFile lf("jj", 1000, 3, 1024, false);
+JLog::LogFile lf("jj", 1000, 3, 1024, false);
 const char* logline = "the is a error in line 1243\n";
 int len=strlen(logline);
 

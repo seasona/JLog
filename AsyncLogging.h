@@ -8,6 +8,8 @@
 #include <vector>
 #include "LogStream.h"
 
+namespace JLog {
+
 /**
  * @brief 异步日志类，分为前后端，前端append()写入缓冲区，缓冲区满了之后
  * 写入后端，后端是一个线程，将缓冲区写入文件。使用双缓冲区提高写入速度
@@ -52,3 +54,5 @@ private:
     BufferPtr next_buffer_;
     BufferVector buffers_;
 };
+
+}

@@ -1,7 +1,7 @@
 #include "../LogStream.h"
 
 int main() {
-    LogStream LOG;
+    JLog::LogStream LOG;
     void* p = &LOG;
     LOG << 0;
     LOG << 1234567890123;

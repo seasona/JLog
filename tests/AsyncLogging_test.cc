@@ -8,7 +8,7 @@ const char* logline = "this is the asynclogging test\n";
 int n = strlen(logline);
 
 int main() {
-    AsyncLogging LOG(name, size);
+    JLog::AsyncLogging LOG(name, size);
 
     // 缓冲区很大，所以其实都是写入了缓冲区
     // 3s测试--OK，32KB

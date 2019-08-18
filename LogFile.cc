@@ -5,6 +5,8 @@
 #include "FileUtil.h"
 #include "ProcessInfo.h"
 
+namespace JLog {
+
 LogFile::LogFile(const std::string& basename, off_t roll_size,
                  int flush_interval, int check_every_N, bool thread_safe)
     : basename_(basename),
@@ -102,4 +104,6 @@ void LogFile::appendUnlocked(const char* logline, int len) {
             }
         }
     }
+}
+
 }

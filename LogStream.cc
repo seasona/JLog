@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <algorithm>
 
+
+namespace JLog {
+
 static const char digits[] = "9876453210123456789";
 static const char* zero = digits + 9;
 
@@ -152,4 +155,6 @@ LogStream& LogStream::operator<<(const void* p) {
         buffer_.add(len + 2);
     }
     return *this;
+}
+
 }

@@ -6,6 +6,9 @@
 #include "FileUtil.h"
 #include "noncopyable.h"
 
+
+namespace JLog {
+
 /**
  * @brief LogFile类对FileUtil类进行了封装，可以完成对日志文件名的
  * 自动记录，以及对于日志写入数据大小以及每24小时自动更换日志文件
@@ -64,3 +67,5 @@ private:
 
     const static int k_roll_per_seconds_ = 60 * 60 * 24;
 };
+
+}

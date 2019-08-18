@@ -17,7 +17,9 @@
 #include <string>
 #include "LogStream.h"
 
-const int roll_size = 40000; ///< 设定日志文件的滚动大小
+namespace JLog {
+
+const int roll_size = 4000000;  ///< 设定日志文件的滚动大小（默认4MB）
 
 class Logger {
 public:
@@ -45,8 +47,9 @@ private:
         std::string basename_;
     };
     Impl impl_;
-    off_t roll_size_;
     static std::string log_filename_;
 };
 
-#define LOG Logger(__FILE__, __LINE__).stream();
+}  // namespace JLog
+
+#define LOG JLog::Logger(__FILE__, __LINE__).stream()
