@@ -1,4 +1,4 @@
-#include "../AsyncLogging.h"
+#include "AsyncLogging.h"
 #include <string.h>
 #include <unistd.h>
 

@@ -1,4 +1,4 @@
-#include "../LogFile.h"
+#include "LogFile.h"
 #include <string.h>
 #include <unistd.h>
 

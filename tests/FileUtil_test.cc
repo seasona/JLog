@@ -1,4 +1,4 @@
-#include "../FileUtil.h"
+#include "FileUtil.h"
 #include <iostream>
 #include <string.h>
 

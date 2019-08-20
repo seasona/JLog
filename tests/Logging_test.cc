@@ -4,7 +4,7 @@
  * 
  */
 
-#include "../Logging.h"
+#include "Logging.h"
 #include <unistd.h>
 #include <iostream>
 #include <memory>

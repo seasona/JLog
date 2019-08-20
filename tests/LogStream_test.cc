@@ -1,4 +1,4 @@
-#include "../LogStream.h"
+#include "LogStream.h"
 
 int main() {
     JLog::LogStream LOG;

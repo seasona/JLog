@@ -87,11 +87,9 @@ private:
 
 }  // namespace JLog
 
-/**
- * @brief 超过设立的日志级别的日志可以输出，比如设立日志级别INFO，
- * 则INFO、 WARN、ERROR、FATAL可以输出
- *
- */
+
+// 超过设立的日志级别的日志可以输出，比如设立日志级别为INFO，
+// 则INFO、 WARN、ERROR、FATAL可以输出
 
 #define LOG_TRACE                                           \
     if (JLog::Logger::getLogLevel() <= JLog::Logger::TRACE) \

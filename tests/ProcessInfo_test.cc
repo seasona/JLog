@@ -1,4 +1,4 @@
-#include "../ProcessInfo.h"
+#include "ProcessInfo.h"
 #include <iostream>
 
 int main() {
