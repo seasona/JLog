@@ -46,12 +46,12 @@ std::string LogFile::getLogFileName(const std::string& basename, time_t* now) {
     struct tm tm;
     *now = time(NULL);
     // 将当地时间转为tm结构体
-    localtime_r(now, &tm);
+    localtime_s(&tm, now);
     // 将tm转化为自定义格式的字符串
-    strftime(timebuf, sizeof(timebuf), ".%Y:%m:%d-%H:%M:%S.", &tm);
+    strftime(timebuf, sizeof(timebuf), ".%Y%m%d-%H%M%S", &tm);
     filename += timebuf;
-
-    filename += ProcessInfo::hostname();
+    // win下日志文件名不能包含:
+    // filename += ProcessInfo::hostname();
 
     char pidbuf[32];
     // 具有最大个数的安全的sprintf

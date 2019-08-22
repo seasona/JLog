@@ -42,7 +42,7 @@ private:
 
     FILE* fp_;
     off_t written_bytes_ = 0;
-    char buffer_[64 * 1024];
+    char buffer_[64 * 1024];    ///< 写入文件的缓冲区
 };
 
 }

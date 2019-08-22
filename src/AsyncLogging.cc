@@ -1,11 +1,29 @@
 #include "AsyncLogging.h"
 #include <assert.h>
-#include <unistd.h>
 #include <chrono>
 #include <functional>
 #include "LogFile.h"
 
 namespace JLog {
+
+std::atomic<AsyncLogging*> AsyncLogging::instance_ = nullptr;
+std::mutex AsyncLogging::mutex_ = std::mutex();
+
+AsyncLogging* AsyncLogging::getInstance(const std::string& basename,
+                                        off_t roll_size, int flush_interval) {
+    AsyncLogging* tmp = instance_.load(std::memory_order_acquire);
+    std::atomic_thread_fence(std::memory_order_acquire);
+    if (tmp == nullptr) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        tmp = instance_.load(std::memory_order_relaxed);
+        if (tmp == nullptr) {
+            tmp = new AsyncLogging(basename, roll_size, flush_interval);
+            std::atomic_thread_fence(std::memory_order_release);
+            instance_.store(tmp, std::memory_order_release);
+        }
+    }
+    return tmp;
+}
 
 AsyncLogging::AsyncLogging(const std::string& basename, off_t roll_size,
                            int flush_interval)
@@ -25,6 +43,7 @@ AsyncLogging::AsyncLogging(const std::string& basename, off_t roll_size,
 AsyncLogging::~AsyncLogging() {
     running_ = false;
     thread_.join();
+    if (instance_) delete instance_;
 }
 
 void AsyncLogging::append(const char* logline, int len) {
@@ -108,4 +127,4 @@ void AsyncLogging::threadFunc() {
     output.flush();
 }
 
-}
+}  // namespace JLog

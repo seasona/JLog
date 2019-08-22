@@ -20,5 +20,6 @@ int main() {
     LOG << p;
 
     printf("%s\n", LOG.buffer().data());
+
     return 0;
 }

@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main() {
-    pid_t pid = ProcessInfo::pid();
+    long pid = static_cast<long>(ProcessInfo::pid());
     std::cout << "The pid is: " << pid << std::endl;
     std::string hostname = ProcessInfo::hostname();
     std::cout << hostname << std::endl;

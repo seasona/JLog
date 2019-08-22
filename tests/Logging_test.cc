@@ -1,21 +1,22 @@
 /**
- * @brief 一次性写入没办法进行文件滚动，实际上也不会有一次性写入大数量日志的情况,
+ * @brief
+ * 一次性写入没办法进行文件滚动，实际上也不会有一次性写入大数量日志的情况,
  * 每次写入日志都会有一些间隔，所以使用usleep模拟
- * 
+ *
  */
 
 #include "Logging.h"
-#include <unistd.h>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <thread>
 #include <vector>
+#include "sleep.h"
 
 void threadFunc() {
     for (int i = 0; i < 100000; ++i) {
         LOG_INFO << i;
-        usleep(100);
+        SLEEP(100);
     }
 }
 
@@ -28,11 +29,11 @@ void type_test() {
     LOG_INFO << 3.1415926;
     LOG_WARN << (short)1;
     LOG_WARN << (long long)1;
-    LOG_ERROR << (unsigned int)1;
+    // LOG_ERROR << (unsigned int)1;
     LOG_FATAL << (unsigned long)1;
     LOG_INFO << (long double)1.6555556;
     LOG_INFO << (unsigned long long)1;
-    LOG_ERROR << 'c';
+    // LOG_ERROR << 'c';
     LOG_INFO << "abcdefg";
     LOG_INFO << std::string("This is a string");
 }
@@ -43,7 +44,7 @@ void stressing_single_thread() {
               << std::endl;
     for (int i = 0; i < 100000; ++i) {
         LOG_INFO << i;
-        usleep(100);
+        SLEEP(100);
     }
 }
 
@@ -59,7 +60,7 @@ void stressing_multi_threads(int threadNum = 4) {
     for (int i = 0; i < threadNum; ++i) {
         vsp[i]->join();
     }
-    sleep(3);
+    SLEEP(3000);
 }
 
 void other() {
@@ -73,15 +74,15 @@ int main() {
     JLog::Logger::setLogLevel(JLog::Logger::TRACE);
     // 共500014行
     type_test();
-    sleep(3);
+    SLEEP(3000);
 
     stressing_single_thread();
-    sleep(3);
+    SLEEP(3000);
 
     other();
-    sleep(3);
+    SLEEP(3000);
 
     stressing_multi_threads();
-    sleep(3);
+    SLEEP(3000);
     return 0;
 }
