@@ -29,11 +29,11 @@ void type_test() {
     LOG_INFO << 3.1415926;
     LOG_WARN << (short)1;
     LOG_WARN << (long long)1;
-    // LOG_ERROR << (unsigned int)1;
+    LOG_ERROR << (unsigned int)1;
     LOG_FATAL << (unsigned long)1;
     LOG_INFO << (long double)1.6555556;
     LOG_INFO << (unsigned long long)1;
-    // LOG_ERROR << 'c';
+    LOG_ERROR << 'c';
     LOG_INFO << "abcdefg";
     LOG_INFO << std::string("This is a string");
 }

@@ -6,8 +6,8 @@
 
 namespace JLog {
 
-std::atomic<AsyncLogging*> AsyncLogging::instance_ = nullptr;
-std::mutex AsyncLogging::mutex_ = std::mutex();
+std::atomic<AsyncLogging*> AsyncLogging::instance_(nullptr);
+std::mutex AsyncLogging::mutex_;
 
 AsyncLogging* AsyncLogging::getInstance(const std::string& basename,
                                         off_t roll_size, int flush_interval) {

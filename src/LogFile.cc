@@ -43,14 +43,14 @@ std::string LogFile::getLogFileName(const std::string& basename, time_t* now) {
     filename = basename;
 
     char timebuf[32];
-    struct tm tm;
+    struct tm *tm;
     *now = time(NULL);
     // 将当地时间转为tm结构体
-    localtime_s(&tm, now);
+    tm = localtime(now);
     // 将tm转化为自定义格式的字符串
-    strftime(timebuf, sizeof(timebuf), ".%Y%m%d-%H%M%S", &tm);
+    strftime(timebuf, sizeof(timebuf), ".%Y%m%d-%H%M%S", tm);
     filename += timebuf;
-    // win下日志文件名不能包含:
+    // win下日志文件名不能包含 :
     // filename += ProcessInfo::hostname();
 
     char pidbuf[32];
@@ -106,4 +106,4 @@ void LogFile::appendUnlocked(const char* logline, int len) {
     }
 }
 
-}
+}  // namespace JLog
