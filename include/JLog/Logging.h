@@ -32,7 +32,7 @@ public:
         DEBUG,
         INFO,
         WARN,
-        ERROR,
+        ERR,
         FATAL,
         NUM_LOG_LEVELS,
     };
@@ -106,9 +106,10 @@ private:
     if (JLog::Logger::getLogLevel() <= JLog::Logger::WARN) \
     JLog::Logger(__FILE__, __LINE__, JLog::Logger::WARN).stream()
 
+// JLog::Logger::ERROR会与MSVC中的全局宏ERROR冲突，所以替换为ERR
 #define LOG_ERROR                                           \
-    if (JLog::Logger::getLogLevel() <= JLog::Logger::ERROR) \
-    JLog::Logger(__FILE__, __LINE__, JLog::Logger::ERROR).stream()
+    if (JLog::Logger::getLogLevel() <= (JLog::Logger::ERR)) \
+    JLog::Logger(__FILE__, __LINE__, (JLog::Logger::ERR)).stream()
 
 #define LOG_FATAL                                           \
     if (JLog::Logger::getLogLevel() <= JLog::Logger::FATAL) \
