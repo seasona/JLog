@@ -6,10 +6,11 @@
 
 void delay(int ms) {
     for (int i = 0; i < ms; i++) {
-        for (int i = 0; i < 500; i++) {
+        for (int j = 0; j < 300; j++) {
         }
-        ]
     }
+}
+
 #else
 #include <unistd.h>
 #define SLEEP(x) usleep(x)

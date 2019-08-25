@@ -23,6 +23,7 @@
 
 2019/8/23 v0.4.1
 + 调整了CMake
++ 修正了MSVC中ERROR全局宏冲突的问题
 
 2019/8/25 v0.4.2
 + 利用Google的benchmark测试，JLog的写入速度大约30MB/s
@@ -30,4 +31,5 @@
 - 可能需要自己写个对应的benchmark来进行测试
 + 自己写的benchmark写入速度大概也是30MB/s
 - 需要改进
+
 
