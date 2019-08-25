@@ -31,5 +31,7 @@
 *.out
 *.app
 
-# build file
+# ignore directory file
 build/*
+.vscode/*
+

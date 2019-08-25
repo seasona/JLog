@@ -11,6 +11,7 @@ include_directories(src)
 
 add_subdirectory(src)
 add_subdirectory(tests)
+add_subdirectory(bench)
 
 option(JLOG_INSTALL "Generate the install target" ON)
 

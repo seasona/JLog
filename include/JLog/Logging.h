@@ -18,7 +18,7 @@
 
 namespace JLog {
 
-const int roll_size = 4000000;  ///< 设定日志文件的滚动大小（默认4MB）
+const int roll_size = 40000000;  ///< 设定日志文件的滚动大小（默认40MB）
 
 /**
  * @brief JLog的API，可以设立日志文件的滚动大小、日志文件的基本名称、

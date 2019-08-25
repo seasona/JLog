@@ -55,7 +55,7 @@ private:
  */
 class LogStream : public noncopyable {
 public:
-    typedef FixedBuffer<k_small_buffer> Buffer;
+    typedef FixedBuffer<k_large_buffer> Buffer;
 
     LogStream() = default;
     ~LogStream() = default;
