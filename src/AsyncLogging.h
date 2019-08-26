@@ -18,6 +18,14 @@ namespace JLog {
  */
 class AsyncLogging : public noncopyable {
 public:
+    /**
+     * @brief 获取单例AsyncLogging，使用了原子栅栏确保正确的双重检查锁模式
+     * 
+     * @param basename 日志文件基础名
+     * @param roll_size 滚动大小
+     * @param flush_interval 刷新时间
+     * @return AsyncLogging* 返回单例
+     */
     static AsyncLogging* getInstance(const std::string& basename, off_t roll_size,
                               int flush_interval = 3);
 
@@ -43,7 +51,7 @@ private:
     static std::atomic<AsyncLogging*> instance_;
 
     void threadFunc();
-    typedef FixedBuffer<k_small_buffer> Buffer;
+    typedef FixedBuffer<k_large_buffer> Buffer;
     typedef std::vector<std::unique_ptr<Buffer>> BufferVector;
     typedef std::unique_ptr<Buffer> BufferPtr;
 

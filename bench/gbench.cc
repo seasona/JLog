@@ -1,6 +1,5 @@
 #include <benchmark/benchmark.h>
-#include <Logging.h>
-#include <unistd.h>
+#include "Logging.h"
 
 static void BM_JLog(benchmark::State& state){
     for(auto _: state){

@@ -1,4 +1,4 @@
-#include <Logging.h>
+#include "Logging.h"
 #include <chrono>
 
 //Benchmark: 313872 iterations per second.

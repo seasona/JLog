@@ -6,8 +6,8 @@
 
 namespace JLog {
 
-const int k_small_buffer = 4000;        //4KB
-const int k_large_buffer = 4000 * 1000; //4MB
+const int k_small_buffer = 4000;         // 4KB
+const int k_large_buffer = 4000 * 1000;  // 4MB
 
 /**
  * @brief 缓冲区
@@ -20,15 +20,15 @@ public:
     FixedBuffer() : cur_(data_) {}
     ~FixedBuffer() = default;
 
-    const char* data() const { return data_; }
-    int length() const { return static_cast<int>(cur_ - data_); }
+    inline const char* data() const { return data_; }
+    inline int length() const { return static_cast<int>(cur_ - data_); }
 
-    char* current() { return cur_; }
-    int avail() const { return static_cast<int>(end() - cur_); }
-    void add(size_t len) { cur_ += len; }
+    inline char* current() { return cur_; }
+    inline int avail() const { return static_cast<int>(end() - cur_); }
+    inline void add(size_t len) { cur_ += len; }
 
-    void reset() { cur_ = data_; }
-    void bzero() { memset(data_, 0, sizeof(data_)); }
+    inline void reset() { cur_ = data_; }
+    inline void bzero() { memset(data_, 0, sizeof(data_)); }
 
     /**
      * @brief 往缓存区中复制数据
@@ -44,7 +44,7 @@ public:
     }
 
 private:
-    const char* end() const { return data_ + sizeof(data_); }
+    inline const char* end() const { return data_ + sizeof(data_); }
     char data_[SIZE];  ///< 缓存区
     char* cur_;        ///< 指向空闲部分的指针
 };
@@ -98,4 +98,4 @@ private:
     static const int k_max_size = 32;  // 32位代表double等的有效位数+12位小数位
 };
 
-}
+}  // namespace JLog

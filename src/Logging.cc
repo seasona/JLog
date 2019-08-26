@@ -14,7 +14,7 @@ const char* log_level_name[Logger::NUM_LOG_LEVELS] = {
 };
 
 // 异步写入数据，确保只有一个AsyncLogging单例类
-void output(const char* msg, int len) {
+inline void output(const char* msg, int len) {
     AsyncLogging::getInstance(Logger::getLogFileName(), roll_size)
         ->append(msg, len);
 }
@@ -29,11 +29,12 @@ Logger::Impl::Impl(const char* filename, int line, LogLevel level,
 void Logger::Impl::formatTime() {
     time_t t = time(NULL);
     char str_t[26] = {0};
+    // TODO
     struct tm* p_time = localtime(&t);
     strftime(str_t, 26, "%Y-%m-%d %H:%M:%S", p_time);
     std::stringstream sin;
     sin << std::this_thread::get_id();
-    stream_ << sin.str()<<" ";
+    stream_ << sin.str() << " ";
     stream_ << str_t << "-( ";
 }
 
@@ -46,9 +47,6 @@ Logger::Logger(const char* filename, int line, LogLevel level)
 Logger::Logger(const char* filename, int line, LogLevel level, const char* func)
     : impl_(filename, line, level, func) {}
 
-// 写入格式为：
-// [DEBUG] 2019-08-19 14:58:29-( 0
-// )-/home/jie/JLog/tests/Logging_test.cc:25:type_test()
 Logger::~Logger() {
     impl_.stream_ << " )-" << impl_.basename_ << ":" << impl_.line_;
     if (impl_.func_) {
