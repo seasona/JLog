@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "FileUtil.h"
-#include "ProcessInfo.h"
+#include "os.h"
 
 namespace JLog {
 
@@ -42,22 +42,21 @@ std::string LogFile::getLogFileName(const std::string& basename, time_t* now) {
     filename.reserve(basename.size() + 64);
     filename = basename;
 
+    *now = ::time(NULL);
     char timebuf[32];
-    struct tm *tm;
-    *now = time(NULL);
     // 将当地时间转为tm结构体
-    tm = localtime(now);
+    std::tm t = OS::localTime(*now);
     // 将tm转化为自定义格式的字符串
-    strftime(timebuf, sizeof(timebuf), ".%Y%m%d-%H%M%S", tm);
+    strftime(timebuf, sizeof(timebuf), ".%Y%m%d-%H%M%S", &t);
     filename += timebuf;
     // win下日志文件名不能包含 :
     // filename += ProcessInfo::hostname();
 
     char pidbuf[32];
     // 具有最大个数的安全的sprintf
-    snprintf(pidbuf, sizeof(pidbuf), ".%d", ProcessInfo::pid());
+    snprintf(pidbuf, sizeof(pidbuf), ".%d",
+             static_cast<int>(OS::getProcessId()));
     filename += pidbuf;
-
     filename += ".log";
 
     return filename;

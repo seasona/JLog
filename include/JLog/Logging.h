@@ -13,12 +13,13 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <functional>
 #include <string>
 #include "LogStream.h"
 
 namespace JLog {
 
-const int roll_size = 40000000;  ///< 设定日志文件的滚动大小（默认40MB）
+const int roll_size = 4000000;  ///< 设定日志文件的滚动大小（默认4MB）
 
 /**
  * @brief JLog的API，可以设立日志文件的滚动大小、日志文件的基本名称、
@@ -27,6 +28,8 @@ const int roll_size = 40000000;  ///< 设定日志文件的滚动大小（默认
  */
 class Logger {
 public:
+    typedef std::function<void(const char* msg, int len)> OutputFunc;
+
     enum LogLevel {
         TRACE,
         DEBUG,
@@ -64,6 +67,8 @@ public:
 
     inline static LogLevel getLogLevel() { return level_; }
 
+    inline static void setOutput(OutputFunc output) { output_func_ = output; }
+
 private:
     //? 这也不是pimpl，不知道专门搞个类是想干嘛
     class Impl {
@@ -79,13 +84,14 @@ private:
         std::string basename_;
         const char* func_;
     };
+
     Impl impl_;
     static std::string log_filename_;  ///< 日志文件基本名
     static LogLevel level_;            ///< 日志输出级别
+    static OutputFunc output_func_;  ///< 设立的日志输出方式-普通or异步
 };
 
 }  // namespace JLog
-
 
 // 超过设立的日志级别的日志可以输出，比如设立日志级别为INFO，
 // 则INFO、 WARN、ERROR、FATAL可以输出

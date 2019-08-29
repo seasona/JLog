@@ -1,31 +1,50 @@
 #include "AsyncLogging.h"
 #include <string.h>
-#include "sleep.h"
+#include <unistd.h>
+#include <chrono>
+#include <thread>
+#include "Logging.h"
 
-std::string name("jlog");
-off_t size = 400 * 1000;  // 40KB
-const char* logline = "this is the asynclogging test\n";
-int n = strlen(logline);
+std::string name("JLog");
+off_t size = 40 * 1000 * 1000;  // 40MB
+const char* logline = "This is the asynclogging test\n";
+int len = strlen(logline);
+JLog::AsyncLogging logger(name, size);
 
-#define LOG JLog::AsyncLogging::getInstance(name,size)
+void func(int howmany, int threads_count) {
+    for (int i = 0; i < howmany / threads_count; i++) {
+        logger.append(logline, len);
+        // usleep(1);
+    }
+}
 
-int main() {
-    // 缓冲区很大，所以其实都是写入了缓冲区
-    // 3s测试--OK，32KB
-    for (int i = 0; i < 10000; i++) {
-        LOG->append(logline, n);
-        SLEEP(100);
+
+int main(int argc, char** argv) {
+    if (argc < 3) {
+        printf("usage: {progarm} <howmay> <threads_count>\n");
+        exit(-1);
     }
-    // 普通测试--OK
-    for (int i = 0; i < 10000; i++) {
-        LOG->append(logline, n);
-        SLEEP(100);
+    int howmany = atoi(argv[1]);
+    int threads_count = atoi(argv[2]);
+
+    std::vector<std::thread> threads;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < threads_count; i++) {
+        threads.emplace_back(std::thread(func, howmany, threads_count));
     }
-    //! 滚动测试--ERROR
-    for (int i = 0; i < 10000; i++) {
-        LOG->append(logline, n);
-        // 睡0.1ms
-        SLEEP(100);
+
+    for (auto& x : threads) {
+        x.join();
     }
+    auto delta = std::chrono::high_resolution_clock::now() - start;
+    auto delta_d =
+        std::chrono::duration_cast<std::chrono::duration<double>>(delta)
+            .count();
+
+    // delta_d -= howmany / 1000000;
+
+    printf("Benchmark: %lf s  %d iterations  %lf iter/s. \n", delta_d, howmany,
+           static_cast<double>(howmany / delta_d));
     return 0;
 }

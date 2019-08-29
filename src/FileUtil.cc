@@ -10,7 +10,7 @@ AppendFile::AppendFile(const std::string& filename)
     //// setbuffer(fp_, buffer_, sizeof(buffer_));
     // 采用c内置函数setvbuf
     setvbuf(fp_, buffer_, _IOFBF, sizeof(buffer_));
-} 
+}
 
 AppendFile::~AppendFile() { fclose(fp_); }
 
@@ -23,7 +23,7 @@ size_t AppendFile::write(const char* logline, size_t len) {
     //// fwrite的线程不安全形式，比fwrite更快
     //// return fwrite_unlocked(logline, 1, len, fp_);
     // win下没有fwrite_unlocked，为了跨平台采用fwrite
-    return fwrite(logline,1,len,fp_);
+    return fwrite(logline, 1, len, fp_);
 }
 
 void AppendFile::append(const char* logline, const size_t len) {

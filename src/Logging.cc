@@ -2,10 +2,10 @@
 #include <time.h>
 #include <sstream>
 #include "AsyncLogging.h"
+#include "os.h"
 
 namespace JLog {
 
-AsyncLogging* async_logger;
 std::string Logger::log_filename_("JLog");
 Logger::LogLevel Logger::level_(Logger::INFO);
 
@@ -13,11 +13,17 @@ const char* log_level_name[Logger::NUM_LOG_LEVELS] = {
     "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL",
 };
 
-// 异步写入数据，确保只有一个AsyncLogging单例类
-inline void output(const char* msg, int len) {
+/*
+// 使用异步写入数据，确保只有一个AsyncLogging单例类
+void outputAsync(const char* msg, int len) {
     AsyncLogging::getInstance(Logger::getLogFileName(), roll_size)
         ->append(msg, len);
 }
+*/
+
+void outputDefault(const char* msg, int len) { fwrite(msg, 1, len, stdout); }
+
+Logger::OutputFunc Logger::output_func_(outputDefault);
 
 Logger::Impl::Impl(const char* filename, int line, LogLevel level,
                    const char* func)
@@ -26,15 +32,12 @@ Logger::Impl::Impl(const char* filename, int line, LogLevel level,
     formatTime();
 }
 
+// TODO 主要耗时在这里，需要对时间和线程id分别进行缓存优化
 void Logger::Impl::formatTime() {
-    time_t t = time(NULL);
     char str_t[26] = {0};
-    // TODO
-    struct tm* p_time = localtime(&t);
-    strftime(str_t, 26, "%Y-%m-%d %H:%M:%S", p_time);
-    std::stringstream sin;
-    sin << std::this_thread::get_id();
-    stream_ << sin.str() << " ";
+    std::tm p_time = OS::localTime(::time(NULL));
+    strftime(str_t, 26, "%Y-%m-%d %H:%M:%S", &p_time);
+    stream_ << static_cast<int>(OS::getThreadId()) << " ";
     stream_ << str_t << "-( ";
 }
 
@@ -55,7 +58,7 @@ Logger::~Logger() {
         impl_.stream_ << "\n";
     }
     const LogStream::Buffer& buf(this->stream().buffer());
-    output(buf.data(), buf.length());
+    output_func_(buf.data(), buf.length());
 }
 
 }  // namespace JLog

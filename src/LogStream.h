@@ -6,8 +6,8 @@
 
 namespace JLog {
 
-const int k_small_buffer = 4000;         // 4KB
-const int k_large_buffer = 4000 * 1000;  // 4MB
+const int k_small_buffer = 4000;             // 4KB
+const int k_large_buffer = 4 * 1000 * 1000;  // 4MB
 
 /**
  * @brief 缓冲区

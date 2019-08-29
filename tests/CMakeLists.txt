@@ -1,6 +1,3 @@
-add_executable(ProcessInfo_test ProcessInfo_test.cc)
-target_link_libraries(ProcessInfo_test JLog)
-
 add_executable(FileUtil_test FileUtil_test.cc)
 target_link_libraries(FileUtil_test JLog)
 

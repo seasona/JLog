@@ -20,14 +20,14 @@ class AsyncLogging : public noncopyable {
 public:
     /**
      * @brief 获取单例AsyncLogging，使用了原子栅栏确保正确的双重检查锁模式
-     * 
+     *
      * @param basename 日志文件基础名
      * @param roll_size 滚动大小
      * @param flush_interval 刷新时间
      * @return AsyncLogging* 返回单例
      */
-    static AsyncLogging* getInstance(const std::string& basename, off_t roll_size,
-                              int flush_interval = 3);
+    static AsyncLogging* getInstance(const std::string& basename,
+                                     off_t roll_size, int flush_interval = 3);
 
     /**
      * @brief 线程安全的前端写入函数
@@ -37,6 +37,10 @@ public:
      */
     void append(const char* logline, int len);
 
+    AsyncLogging(const std::string& basename, off_t roll_size,
+                 int flush_interval = 3);
+    ~AsyncLogging();
+
 private:
     /**
      * @brief 构造函数，注意Asynclogging一般只构造一个，作为单例使用
@@ -45,9 +49,9 @@ private:
      * @param roll_size 日志文件滚动大小
      * @param flush_interval 缓冲区最迟写入时间
      */
-    AsyncLogging(const std::string& basename, off_t roll_size,
-                 int flush_interval = 3);
-    ~AsyncLogging();
+    // AsyncLogging(const std::string& basename, off_t roll_size,
+    //             int flush_interval = 3);
+    // ~AsyncLogging();
     static std::atomic<AsyncLogging*> instance_;
 
     void threadFunc();

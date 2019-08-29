@@ -1,88 +1,102 @@
-/**
- * @brief
- * 一次性写入没办法进行文件滚动，实际上也不会有一次性写入大数量日志的情况,
- * 每次写入日志都会有一些间隔，所以使用usleep模拟
- *
- */
-
 #include "Logging.h"
-#include <iostream>
-#include <memory>
+#include "AsyncLogging.h"
+#include "LogFile.h"
+
+#include <stdio.h>
+#include <sys/resource.h>
+#include <unistd.h>
+#include <chrono>
 #include <string>
 #include <thread>
-#include <vector>
-#include "sleep.h"
 
-void threadFunc() {
-    for (int i = 0; i < 100000; ++i) {
-        LOG_INFO << i;
-        SLEEP(100);
+off_t kRollSize = 100 * 1000 * 1000;  // 100MB
+
+JLog::AsyncLogging* g_asyncLog = NULL;
+JLog::LogFile* g_logFile = NULL;
+
+void asyncOutput(const char* msg, int len) { g_asyncLog->append(msg, len); }
+
+void dummyOutput(const char* msg, int len) { g_logFile->append(msg, len); }
+
+void func(int kBatch) {
+    for (int i = 0; i < kBatch; ++i) {
+        LOG_INFO << "Hello 0123456789"
+                 << " abcdefghijklmnopqrstuvwxyz ";
     }
 }
 
-void type_test() {
-    // 13 lines
-    std::cout << "----------type test-----------" << std::endl;
-    LOG_DEBUG << 0;
-    LOG_TRACE << 123456789;
-    LOG_INFO << 1.0f;
-    LOG_INFO << 3.1415926;
-    LOG_WARN << (short)1;
-    LOG_WARN << (long long)1;
-    LOG_ERROR << (unsigned int)1;
-    LOG_FATAL << (unsigned long)1;
-    LOG_INFO << (long double)1.6555556;
-    LOG_INFO << (unsigned long long)1;
-    LOG_ERROR << 'c';
-    LOG_INFO << "abcdefg";
-    LOG_INFO << std::string("This is a string");
-}
+void benchAsync(bool longLog) {
+    JLog::Logger::setOutput(asyncOutput);
 
-void stressing_single_thread() {
-    // 100000 lines
-    std::cout << "----------stressing test single thread-----------"
-              << std::endl;
-    for (int i = 0; i < 100000; ++i) {
-        LOG_INFO << i;
-        SLEEP(100);
+    int howmany = 1000000;
+    int threads_count = 5;
+
+    std::vector<std::thread> threads;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < threads_count; i++) {
+        threads.emplace_back(std::thread(func, howmany / threads_count));
     }
-}
 
-void stressing_multi_threads(int threadNum = 4) {
-    // threadNum * 100000 lines
-    std::cout << "----------stressing test multi thread-----------"
-              << std::endl;
-    std::vector<std::shared_ptr<std::thread>> vsp;
-    for (int i = 0; i < threadNum; ++i) {
-        std::shared_ptr<std::thread> tmp(new std::thread(threadFunc));
-        vsp.push_back(tmp);
+    for (auto& x : threads) {
+        x.join();
     }
-    for (int i = 0; i < threadNum; ++i) {
-        vsp[i]->join();
+    auto delta = std::chrono::high_resolution_clock::now() - start;
+    auto delta_d =
+        std::chrono::duration_cast<std::chrono::duration<double>>(delta)
+            .count();
+
+    printf("Benchmark: %lf s  %d iterations  %lf iter/s. \n", delta_d, howmany,
+           static_cast<double>(howmany / delta_d));
+}
+
+void benchDummy(bool longLog) {
+    JLog::Logger::setOutput(dummyOutput);
+
+    int cnt = 0;
+    const int kBatch = 1000000;
+    std::string empty = " ";
+    std::string longStr(3000, 'X');
+    longStr += " ";
+
+    auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < kBatch; ++i) {
+        LOG_INFO << "Hello 0123456789"
+                 << " abcdefghijklmnopqrstuvwxyz "
+                 << (longLog ? longStr : empty) << cnt;
+        ++cnt;
     }
-    SLEEP(3000);
+    auto delta = std::chrono::high_resolution_clock::now() - start;
+    auto delta_d =
+        std::chrono::duration_cast<std::chrono::duration<double>>(delta)
+            .count();
+    printf("Benchmark: %lf s  %d iterations  %lf iter/s. \n", delta_d, kBatch,
+           static_cast<double>(kBatch / delta_d));
 }
 
-void other() {
-    // 1 line
-    std::cout << "----------other test-----------" << std::endl;
-    LOG_INFO << "fddsa" << 'c' << 0 << 3.666 << std::string("This is a string");
-}
+int main(int argc, char* argv[]) {
+    {
+        // set max virtual memory to 2GB.
+        size_t kOneGB = 1000 * 1024 * 1024;
+        rlimit rl = {2 * kOneGB, 2 * kOneGB};
+        setrlimit(RLIMIT_AS, &rl);
+    }
 
-int main() {
-    JLog::Logger::setLogFileName("test");
-    JLog::Logger::setLogLevel(JLog::Logger::TRACE);
-    // 共500014行
-    type_test();
-    SLEEP(3000);
+    printf("pid = %d\n", getpid());
 
-    stressing_single_thread();
-    SLEEP(3000);
+    char name[256] = {0};
+    strncpy(name, argv[0], sizeof name - 1);
 
-    other();
-    SLEEP(3000);
+    printf("=====================normal=====================\n");
+    JLog::LogFile log(::basename(name), kRollSize);
+    g_logFile = &log;
+    bool longLog = argc > 1;
+    benchDummy(longLog);
 
-    stressing_multi_threads();
-    SLEEP(3000);
+    printf("===============async (10 threads)================\n");
+    JLog::AsyncLogging alog(::basename(name), kRollSize);
+    g_asyncLog = &alog;
+    benchAsync(longLog);
+
     return 0;
 }
