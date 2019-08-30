@@ -32,7 +32,6 @@ Logger::Impl::Impl(const char* filename, int line, LogLevel level,
     formatTime();
 }
 
-// TODO 主要耗时在这里，需要对时间和线程id分别进行缓存优化
 void Logger::Impl::formatTime() {
     char str_t[26] = {0};
     std::tm p_time = OS::localTime(::time(NULL));

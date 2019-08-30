@@ -29,7 +29,7 @@ void benchAsync(bool longLog) {
     JLog::Logger::setOutput(asyncOutput);
 
     int howmany = 1000000;
-    int threads_count = 5;
+    int threads_count = 10;
 
     std::vector<std::thread> threads;
 
@@ -75,13 +75,6 @@ void benchDummy(bool longLog) {
 }
 
 int main(int argc, char* argv[]) {
-    {
-        // set max virtual memory to 2GB.
-        size_t kOneGB = 1000 * 1024 * 1024;
-        rlimit rl = {2 * kOneGB, 2 * kOneGB};
-        setrlimit(RLIMIT_AS, &rl);
-    }
-
     printf("pid = %d\n", getpid());
 
     char name[256] = {0};

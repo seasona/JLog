@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.2)
-project(JLog VERSION 0.2.0)
-set(CMAKE_CXX_STANDARD 17)
+project(JLog VERSION 0.4.3)
+set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_CXX_COMPILER "g++")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -pg -g")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -pg -g -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "release")
 
 # Define GNU standard installation directories
 # Provides install directory variables as defined by the GNU Coding Standards.
@@ -17,7 +17,6 @@ include_directories(src)
 
 add_subdirectory(src)
 add_subdirectory(tests)
-add_subdirectory(bench)
 
 option(JLOG_INSTALL "Generate the install target" ON)
 

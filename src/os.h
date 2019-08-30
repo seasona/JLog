@@ -38,7 +38,7 @@ inline size_t getThreadId() noexcept {
 }
 
 /**
- * @brief The original localtime in C is slow and non thread safe,
+ * @brief The original localtime in C is much slower and non thread safe,
  * so use the os'function instead
  * 
  * @param t The current time, usually got by now()

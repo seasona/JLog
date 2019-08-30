@@ -26,8 +26,9 @@ public:
      * @param flush_interval 刷新时间
      * @return AsyncLogging* 返回单例
      */
-    static AsyncLogging* getInstance(const std::string& basename,
+    /*static AsyncLogging* getInstance(const std::string& basename,
                                      off_t roll_size, int flush_interval = 3);
+    */
 
     /**
      * @brief 线程安全的前端写入函数
@@ -52,7 +53,7 @@ private:
     // AsyncLogging(const std::string& basename, off_t roll_size,
     //             int flush_interval = 3);
     // ~AsyncLogging();
-    static std::atomic<AsyncLogging*> instance_;
+    // static std::atomic<AsyncLogging*> instance_;
 
     void threadFunc();
     typedef FixedBuffer<k_large_buffer> Buffer;
@@ -65,7 +66,7 @@ private:
 
     std::atomic<bool> running_;  ///< 原子操作，用于销毁线程
     std::thread thread_;
-    static std::mutex mutex_;
+    std::mutex mutex_;
     std::condition_variable cond_;
     BufferPtr current_buffer_;
     BufferPtr next_buffer_;

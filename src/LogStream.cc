@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <algorithm>
 
-
 namespace JLog {
 
 static const char digits[] = "9876453210123456789";
@@ -133,6 +132,7 @@ LogStream& LogStream::operator<<(const char* str) {
     } else {
         buffer_.append("(null)", 6);
     }
+
     return *this;
 }
 
@@ -151,10 +151,10 @@ LogStream& LogStream::operator<<(const void* p) {
         char* buf = buffer_.current();
         buf[0] = '0';
         buf[1] = 'x';
-        size_t len = convert(buf + 2, v);
+        size_t len = convertHex(buf + 2, v);
         buffer_.add(len + 2);
     }
     return *this;
 }
 
-}
+}  // namespace JLog

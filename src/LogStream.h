@@ -45,8 +45,8 @@ public:
 
 private:
     inline const char* end() const { return data_ + sizeof(data_); }
-    char data_[SIZE];  ///< 缓存区
-    char* cur_;        ///< 指向空闲部分的指针
+    char data_[SIZE];    ///< 缓存区
+    char* cur_;  ///< 指向空闲部分的指针
 };
 
 /**

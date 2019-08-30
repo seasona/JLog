@@ -6,9 +6,9 @@
 
 namespace JLog {
 
-std::atomic<AsyncLogging*> AsyncLogging::instance_(nullptr);
-std::mutex AsyncLogging::mutex_;
-
+//std::atomic<AsyncLogging*> AsyncLogging::instance_(nullptr);
+//std::mutex AsyncLogging::mutex_;
+/*
 AsyncLogging* AsyncLogging::getInstance(const std::string& basename,
                                         off_t roll_size, int flush_interval) {
     AsyncLogging* tmp = instance_.load(std::memory_order_acquire);
@@ -23,7 +23,7 @@ AsyncLogging* AsyncLogging::getInstance(const std::string& basename,
         }
     }
     return tmp;
-}
+}*/
 
 AsyncLogging::AsyncLogging(const std::string& basename, off_t roll_size,
                            int flush_interval)
@@ -43,7 +43,7 @@ AsyncLogging::AsyncLogging(const std::string& basename, off_t roll_size,
 AsyncLogging::~AsyncLogging() {
     running_ = false;
     thread_.join();
-    if (instance_) delete instance_;
+    //if (instance_) delete instance_;
 }
 
 void AsyncLogging::append(const char* logline, int len) {
