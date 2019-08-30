@@ -36,6 +36,10 @@
 + 将Logging.c中的formatTime中的localtime替换为win下的localtime_s和Linux下的localtime_r，即保证了线程安全，又将速度提高到75w/s
 + 将获取线程id修改为os自带函数，c++中的std::this_thread::get_id太慢，速度提高到95w/s
 
+2019/8/30 v0.4.4
++ 异步日志的实现方式添加了阻塞队列的模式，速度为80w/s
+- 原本的双缓冲异步日志速度为97w/s，所以没什么提升，作为可选提供
+
 
 
 

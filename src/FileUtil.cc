@@ -8,6 +8,9 @@ AppendFile::AppendFile(const std::string& filename)
     : fp_(fopen(filename.c_str(), "a")) {
     //// setbuffer的作用就是对读写文件流设立一个缓存区(linux)
     //// setbuffer(fp_, buffer_, sizeof(buffer_));
+    if (fp_ == nullptr) {
+        perror("The file is not exist!");
+    }
     // 采用c内置函数setvbuf
     setvbuf(fp_, buffer_, _IOFBF, sizeof(buffer_));
 }

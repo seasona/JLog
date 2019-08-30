@@ -3,8 +3,6 @@
 #include "LogFile.h"
 
 #include <stdio.h>
-#include <sys/resource.h>
-#include <unistd.h>
 #include <chrono>
 #include <string>
 #include <thread>
@@ -75,8 +73,6 @@ void benchDummy(bool longLog) {
 }
 
 int main(int argc, char* argv[]) {
-    printf("pid = %d\n", getpid());
-
     char name[256] = {0};
     strncpy(name, argv[0], sizeof name - 1);
 
