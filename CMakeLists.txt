@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.0)
 project(JLog VERSION 0.4.3)
 set(CMAKE_CXX_STANDARD 11)
 
