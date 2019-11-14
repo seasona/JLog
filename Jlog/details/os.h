@@ -27,6 +27,12 @@ namespace Jlog {
 
 namespace details {
 
+#ifdef _WIN32
+#define JLOG_EOL "\r\n"
+#else
+#define JLOG_EOL "\n"
+#endif
+
 /**
  * @brief Get the Process Id object
  * @return unsigned long Return current process id as unsigned long

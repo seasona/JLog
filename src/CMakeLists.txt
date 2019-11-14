@@ -1,2 +1,0 @@
-AUX_SOURCE_DIRECTORY(. SRC_LIST)
-add_library(JLog STATIC ${SRC_LIST})

@@ -210,11 +210,11 @@ inline void Logger::swap(Logger &other) noexcept {
     other.level_.store(my_level);
 }
 
-// use copy-and-swap assignment, you don't want to change the value of parameter
-// passed in, so the parameter should be a copy, not a reference. its benefit is
-// you don't need to determinate if the parameter is itself, but copy-and-swap
-// would always cause a reallocation so its performance maybe lower than the non
-// copy-and-swap assignment
+/// use copy-and-swap assignment, you don't want to change the value of
+/// parameter passed in, so the parameter should be a copy, not a reference. its
+/// benefit is you don't need to determinate if the parameter is itself, but
+/// copy-and-swap would always cause a reallocation so its performance maybe
+/// lower than the non copy-and-swap assignment
 inline Logger &Logger::operator=(Logger other) noexcept { this->swap(other); }
 
 }  // namespace Jlog

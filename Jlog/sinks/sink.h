@@ -22,11 +22,11 @@ protected:
     level_t level_{level::k_trace};
 };
 
-// inline must be placed before definition, useless put before declaration
+/// inline must be placed before definition, useless put before declaration
 inline bool Sink::shouldLog(Jlog::level::level_enum msg_level) const {
-    // load and store can get and set the value of std::atomic
-    // std::memory_order_relaxed means the operation is atomic but without
-    // sequence, usually use in condtion which only care about data result
+    /// load and store can get and set the value of std::atomic
+    /// std::memory_order_relaxed means the operation is atomic but without
+    /// sequence, usually use in condtion which only care about data result
     return msg_level >= level_.load(std::memory_order_relaxed);
 }
 
