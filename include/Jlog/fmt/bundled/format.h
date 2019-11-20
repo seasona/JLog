@@ -545,8 +545,6 @@ enum { inline_buffer_size = 500 };
   The output can be converted to an ``std::string`` with ``to_string(out)``.
   \endrst
  */
-
-// it's just like the implementation of vector
 template <typename T, std::size_t SIZE = inline_buffer_size,
           typename Allocator = std::allocator<T>>
 class basic_memory_buffer : private Allocator, public internal::buffer<T> {
@@ -2993,6 +2991,7 @@ class format_int {
 private:
     // Buffer should be large enough to hold all digits (digits10 + 1),
     // a sign and a null character.
+    /// std::numeric_limits<T>::digits10 can get max digit numbers of base 10
     enum {
         buffer_size = std::numeric_limits<unsigned long long>::digits10 + 3
     };
@@ -3023,6 +3022,7 @@ private:
         return ptr;
     }
 
+    /// this method is no special meaning, use std::abs is the same even faster speed
     void format_signed(long long value) {
         unsigned long long abs_value = static_cast<unsigned long long>(value);
         bool negative = value < 0;

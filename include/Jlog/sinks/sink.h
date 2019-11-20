@@ -11,7 +11,6 @@ public:
     virtual ~Sink() = default;
     virtual void log(const details::LogMessage &msg) = 0;
     virtual void flush() = 0;
-    virtual void setPattern(const std::string &pattern) = 0;
     // virtual void setFormatter() = 0;
 
     void setLevel(level::level_enum log_level);

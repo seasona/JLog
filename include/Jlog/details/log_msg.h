@@ -24,6 +24,10 @@ struct LogMessage {
     size_t thread_id = 0;
     SourceLoc source;
     string_view_t payload;
+
+    // wrapping the formatted text with color(updated by pattern_formatter)
+    mutable size_t color_range_start{0};
+    mutable size_t color_range_end{0};
 };
 
 inline LogMessage::LogMessage(Jlog::SourceLoc loc, string_view_t logger_name_in,
@@ -32,7 +36,7 @@ inline LogMessage::LogMessage(Jlog::SourceLoc loc, string_view_t logger_name_in,
     : logger_name(logger_name_in),
       level(lvl),
       time(os::now()),
-      thread_id(getThreadId()),
+      thread_id(os::getThreadId()),
       source(loc),
       payload(msg) {}
 

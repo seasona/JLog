@@ -27,11 +27,27 @@ namespace Jlog {
 
 namespace details {
 
+namespace os {
+
+// eol definition
 #ifdef _WIN32
 #define JLOG_EOL "\r\n"
 #else
 #define JLOG_EOL "\n"
 #endif
+
+/// usage like os::JLOG_EOL is wrong, because it will become os::"\n",
+/// so it better not use macro in namespace
+constexpr static const char* default_eol = JLOG_EOL;
+
+// folder separator
+#ifdef _WIN32
+#define JLOG_FOLDER_SEP '\\'
+#else
+#define JLOG_FOLDER_SEP '/'
+#endif
+
+constexpr static const char default_folder_sep = JLOG_FOLDER_SEP;
 
 /**
  * @brief Get the Process Id object
@@ -63,7 +79,7 @@ inline size_t getThreadId() noexcept {
  * @param t The current time, usually got by now()
  * @return std::tm The tm struct
  */
-inline std::tm localTime(const time_t &t) {
+inline std::tm localTime(const time_t& t) {
 #ifdef _WIN32
     std::tm p_time;
     localtime_s(&p_time, &t);
@@ -81,6 +97,8 @@ inline std::tm localTime(const time_t &t) {
 inline std::chrono::system_clock::time_point now() noexcept {
     return std::chrono::system_clock::now();
 }
+
+}  // namespace os
 
 }  // namespace details
 

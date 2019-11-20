@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Jlog/common.h"
 #include "Jlog/fmt/fmt.h"
 
@@ -38,6 +40,7 @@ inline void pad2(int n, memory_buf_t &dest) {
     }
 }
 
+// get the millisecond default
 template <typename ToDuration>
 inline ToDuration timeFraction(log_clock::time_point tp) {
     using std::chrono::duration_cast;
@@ -46,6 +49,37 @@ inline ToDuration timeFraction(log_clock::time_point tp) {
     auto secs = duration_cast<seconds>(duration);
     return duration_cast<ToDuration>(duration) -
            duration_cast<ToDuration>(secs);
+}
+
+/// Bit Twiddling Hacks by Sean Eron Anderson fast get digits of unsigned number
+/// [link](http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog10)
+/// [benchmark](https://github.com/localvoid/cxx-benchmark-count-digits)
+template <typename T>
+inline unsigned countDigits(T n) {
+    /// std::conditional(bool, type1, type2)
+    /// means the type = bool?type1:type2
+    using count_type = typename std::conditional<(sizeof(T) > sizeof(uint32_t)),
+                                                 uint64_t, uint32_t>::type;
+    // T can be 8bit or 16bit, so must transform to 32bit
+    return static_cast<unsigned>(
+        fmt::internal::count_digits(static_cast<count_type>(n)));
+}
+
+// insert (width - digit) zeros before the unsigned, like: 003
+template <typename T>
+inline void padUnit(T n, unsigned int width, memory_buf_t &dest) {
+    static_assert(std::is_unsigned<T>::value, "pad_uint must get unsigned T");
+    auto digits = countDigits(n);
+    if (width > digits) {
+        const char *zeroes = "0000000000000000000";
+        dest.append(zeroes, zeroes + width - digits);
+    }
+    appendInt(n, dest);
+}
+
+template <typename T>
+inline void pad3(T n, memory_buf_t &dest) {
+    padUnit(n, 3, dest);
 }
 
 }  // namespace fmt_helper
